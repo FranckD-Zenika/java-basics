@@ -3,6 +3,8 @@ package com.zenika.javabasics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -28,12 +30,29 @@ public class Main {
         collection.removeIf(integer -> integer != null && integer == 2);
         System.out.println(collection);
 
-        collection
+        var s = collection
                 .stream()
                 .peek(System.out::println)
-                .map(String::valueOf)
-                .map(String::toUpperCase)
-                ;
+//                .flatMap(i -> Stream.of(i, i*5, i*10))
+                .collect(Collectors.toMap(integer -> integer, integer -> integer * 5, Integer::sum));
+        System.out.println(collection);
+        System.out.println(s);
+
+        var c = collection
+                .stream()
+                .map(integer -> MonObjet.from(integer, String.valueOf(integer)))
+                .collect(Collectors.toMap(MonObjet::getId, Function.identity(), (s1, s2) -> s1));
+
+        System.out.println(c);
+        System.out.println(c.get(3));
+
+        var collection2 = new ArrayList<MonObjet>();
+
+        var result = collection2
+                .stream()
+                .filter(monObjet -> monObjet.getId() == 3)
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
 
 
 
