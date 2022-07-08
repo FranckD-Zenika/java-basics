@@ -2,9 +2,15 @@ package com.zenika.javabasics;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.function.Predicate.not;
 
 public class Main {
 
@@ -43,20 +49,49 @@ public class Main {
                 .map(integer -> MonObjet.from(integer, String.valueOf(integer)))
                 .collect(Collectors.toMap(MonObjet::getId, Function.identity(), (s1, s2) -> s1));
 
+        var x = Stream.of("a", "b").reduce("", String::concat);
+        System.out.println(x);
+        // TODO verifier utilité du 3ème paramètre.
+        var y = Stream.of("a", "b").reduce(new StringBuilder(),
+                StringBuilder::append,
+                (stringBuilder, stringBuilder2) -> stringBuilder.append(stringBuilder2.toString()));
+        System.out.println(y);
+        Collection<String> a = List.of("a", "b", "c");
+
+        var z1 = a.stream().noneMatch("y"::equals);
+        var z2 = a.stream().anyMatch("a"::equals);
+        var z3 = a.stream().allMatch("a"::equals);
+        System.out.println(z1 + ", " + z2 + ", " + z3);
+
         System.out.println(c);
         System.out.println(c.get(3));
 
         var collection2 = new ArrayList<MonObjet>();
 
-        var result = collection2
-                .stream()
-                .filter(monObjet -> monObjet.getId() == 3)
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
+//        var result = collection2
+//                .stream()
+//                .filter(not(monObjet -> monObjet.getId() == 3))
+//                .findFirst()
+//                .orElseThrow(RuntimeException::new);
 
+        var strings = new ArrayList<String>();
+        strings.add("a");
+        strings.add(null);
+        strings.add("d");
+        strings.add("");
+        strings.add(null);
+        strings.add("  ");
+        strings.add("e");
 
-
+        var stringList = strings.stream()
+                .filter(isNotNullNorBlank)
+                .collect(Collectors.toList());
+        System.out.println(stringList);
     }
+
+    private static final Predicate<String> isNotNull = Objects::nonNull;
+    private static final Predicate<String> isBlank = String::isBlank;
+    private static final Predicate<String> isNotNullNorBlank = isNotNull.and(not(isBlank));
 
     static void x(Object o, String b) {
         if (o == null || b == null)
