@@ -1,6 +1,12 @@
 package com.zenika.javabasics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MonObjet {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonObjet.class);
+
     private int id;
     private String name;
 
@@ -10,6 +16,7 @@ public class MonObjet {
     }
 
     public static MonObjet from(int id, String name) {
+        LOGGER.warn("a new object is created");
         return new MonObjet(id, name);
     }
 

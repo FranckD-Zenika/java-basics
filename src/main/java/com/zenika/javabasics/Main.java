@@ -1,5 +1,10 @@
 package com.zenika.javabasics;
 
+import com.zenika.javabasics.services.TestService;
+import com.zenika.javabasics.utils.Producer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,6 +18,8 @@ import java.util.stream.Stream;
 import static java.util.function.Predicate.not;
 
 public class Main {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
         Collection<Integer> collection = new ArrayList<>();
@@ -31,18 +38,23 @@ public class Main {
         collectionToRetain.add(7);
         collectionToRetain.add(8);
         collection.retainAll(collectionToRetain);
-        System.out.println(collection);
+        LOGGER.trace("trace");
+        LOGGER.debug("debug {}", "arg1");
+        LOGGER.info("info");
+        LOGGER.warn("warn");
+        LOGGER.error("error");
+        LOGGER.info("{}", collection);
 
         collection.removeIf(integer -> integer != null && integer == 2);
-        System.out.println(collection);
+        LOGGER.info("{}", collection);
 
         var s = collection
                 .stream()
                 .peek(System.out::println)
 //                .flatMap(i -> Stream.of(i, i*5, i*10))
                 .collect(Collectors.toMap(integer -> integer, integer -> integer * 5, Integer::sum));
-        System.out.println(collection);
-        System.out.println(s);
+        LOGGER.info("{}", collection);
+        LOGGER.info("{}", s);
 
         var c = collection
                 .stream()
@@ -87,6 +99,16 @@ public class Main {
                 .filter(isNotNullNorBlank)
                 .collect(Collectors.toList());
         System.out.println(stringList);
+
+
+        TestService testService = Producer.testService();
+        TestService testService2 = Producer.testService2();
+
+        for (int i = 0; i < 5; i++) {
+            LOGGER.info("isValid({}) : {}", i, testService.isValid(i));
+            LOGGER.info("isValid({}) : {}", i, testService2.isValid(i));
+        }
+
     }
 
     private static final Predicate<String> isNotNull = Objects::nonNull;
