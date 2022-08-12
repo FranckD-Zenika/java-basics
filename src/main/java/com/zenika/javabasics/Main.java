@@ -1,9 +1,10 @@
 package com.zenika.javabasics;
 
+import com.zenika.javabasics.logger.CustomLoggerFactory;
 import com.zenika.javabasics.services.TestService;
 import com.zenika.javabasics.utils.Producer;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,9 +20,10 @@ import static java.util.function.Predicate.not;
 
 public class Main {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER = CustomLoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        MDC.put("MyValue", "value");
         Collection<Integer> collection = new ArrayList<>();
         collection.add(1);
         collection.add(2);
@@ -44,6 +46,8 @@ public class Main {
         LOGGER.warn("warn");
         LOGGER.error("error");
         LOGGER.info("{}", collection);
+
+
 
         collection.removeIf(integer -> integer != null && integer == 2);
         LOGGER.info("{}", collection);
